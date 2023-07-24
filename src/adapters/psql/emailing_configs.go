@@ -2,6 +2,7 @@ package psql
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	"github.com/gabaghul/owlery/src/domain/emailing/models"
@@ -10,7 +11,7 @@ import (
 
 func (a PsqlAdapter) GetAllEmailingConfigs(ctx context.Context) (configs []models.EmailingConfigs, err error) {
 	rows, err := a.pool.QueryContext(ctx, "SELECT client_id, created_at, updated_at, active FROM emailing_configs")
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		return []models.EmailingConfigs{}, errors.Wrap(err, "could not fetch all emailing configs")
 	}
 	defer rows.Close()
@@ -34,8 +35,8 @@ func (a PsqlAdapter) GetAllEmailingConfigs(ctx context.Context) (configs []model
 
 func (a PsqlAdapter) GetEmailingConfigsByClientID(ctx context.Context, clientID int64) (configs []models.EmailingConfigs, err error) {
 	rows, err := a.pool.QueryContext(ctx, "SELECT client_id, created_at, updated_at, active FROM emailing_configs WHERE client_id = $1", clientID)
-	if err != nil {
-		return []models.EmailingConfigs{}, errors.Wrap(err, "could not fetch all emailing configs")
+	if err != nil && err != sql.ErrNoRows {
+		return []models.EmailingConfigs{}, errors.Wrap(err, fmt.Sprintf("could not fetch emailing configs for client id %d", clientID))
 	}
 	defer rows.Close()
 
@@ -47,7 +48,7 @@ func (a PsqlAdapter) GetEmailingConfigsByClientID(ctx context.Context, clientID 
 			&config.UpdatedAt,
 			&config.Active,
 		); err != nil {
-			return []models.EmailingConfigs{}, errors.Wrap(err, fmt.Sprintf("could not scan filtered returned values from emailing configs table for client id %s", clientID))
+			return []models.EmailingConfigs{}, errors.Wrap(err, fmt.Sprintf("could not scan filtered returned values from emailing configs table for client id %d", clientID))
 		}
 
 		configs = append(configs, config)
