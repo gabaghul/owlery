@@ -13,10 +13,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-type ingestContactRecordsRequest struct {
-	entities []ingestContactRecordsEntity
-}
-
 type ingestContactRecordsEntity struct {
 	ID        string `json:"id"`
 	Firstname string `json:"firstname"`
@@ -95,7 +91,7 @@ func (a OmetriaEmailingIngestAdapter) IngestContactRecords(ctx context.Context, 
 	}
 }
 
-func (a OmetriaEmailingIngestAdapter) toRequestBody(contacts []models.Contact) ingestContactRecordsRequest {
+func (a OmetriaEmailingIngestAdapter) toRequestBody(contacts []models.Contact) []ingestContactRecordsEntity {
 	entities := make([]ingestContactRecordsEntity, len(contacts))
 	for i, contact := range contacts {
 		entities[i] = ingestContactRecordsEntity{
@@ -107,5 +103,5 @@ func (a OmetriaEmailingIngestAdapter) toRequestBody(contacts []models.Contact) i
 		}
 	}
 
-	return ingestContactRecordsRequest{entities: entities}
+	return entities
 }

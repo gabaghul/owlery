@@ -35,7 +35,7 @@ func NewOmetriaEmailingIngestAdapter(client http.Client, logger *zerolog.Logger,
 	return OmetriaEmailingIngestAdapter{
 		client:  client,
 		apiKey:  apiKey,
-		baseURL: apiKey,
+		baseURL: baseUrl,
 		logger:  logger,
 	}
 }

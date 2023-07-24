@@ -19,7 +19,7 @@ type ContactList struct {
 
 type Contact struct {
 	ID        string
-	ClientID  string
+	ClientID  int64
 	Firstname string
 	Lastname  string
 	Email     string
