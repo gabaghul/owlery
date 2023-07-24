@@ -45,17 +45,17 @@ func (a MailChimpAdapter) GetContactsByListID(ctx context.Context, listID string
 		count = 1000
 	}
 
-	url := fmt.Sprintf("%s/lists/%s/members?offset=%d&count=%d&fields=%s", a.BaseURL, listID, offset, count, fieldsToFetch)
+	url := fmt.Sprintf("%s/lists/%s/members?offset=%d&count=%d&fields=%s", a.baseURL, listID, offset, count, fieldsToFetch)
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return GetContactsByListIDResponse{}, errors.Wrap(err, "could not create request for get contacts by list id resource")
 	}
 
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", a.APIKey))
-	req.Header.Add("server", a.Server)
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", a.apiKey))
+	req.Header.Add("server", a.server)
 
-	resBody, err := a.Client.Do(req)
+	resBody, err := a.client.Do(req)
 	if err != nil {
 		return GetContactsByListIDResponse{}, errors.Wrap(err, "could not receive data from get contacts by list id resource")
 	}
@@ -71,7 +71,7 @@ func (a MailChimpAdapter) GetContactsByListID(ctx context.Context, listID string
 			return GetContactsByListIDResponse{}, errors.Wrap(err, "could not unmarshal response body from members list info callback to json")
 		}
 
-		a.Logger.Debug().
+		a.logger.Debug().
 			Str("list_id", listID).
 			Str("total_items", strconv.Itoa(int(response.TotalItems))).
 			Msg("successfully received data from members list info api")
@@ -87,7 +87,7 @@ func (a MailChimpAdapter) GetContactsByListID(ctx context.Context, listID string
 			return GetContactsByListIDResponse{}, errors.Wrap(err, "could not unmarshal error response body from members list info callback to json")
 		}
 
-		a.Logger.Error().
+		a.logger.Error().
 			Str("list_id", listID).
 			Str("type", errorResponse.Type).
 			Str("title", errorResponse.Title).

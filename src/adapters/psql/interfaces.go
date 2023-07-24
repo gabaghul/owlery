@@ -4,16 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 
+	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
 type PsqlAdapter struct {
-	Pool   *sql.DB
-	Logger *zerolog.Logger
+	pool   *sql.DB
+	logger *zerolog.Logger
 }
 
-func NewPsqlAdapter(logger *zerolog.Logger, host, port, user, password, dbname string) (PsqlAdapter, error) {
+func NewPsqlAdapter(logger *zerolog.Logger, host string, port int, user, password, dbname string) (PsqlAdapter, error) {
 	psqlConnString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	pool, err := sql.Open("postgres", psqlConnString)
 	if err != nil {
@@ -21,7 +22,7 @@ func NewPsqlAdapter(logger *zerolog.Logger, host, port, user, password, dbname s
 	}
 
 	return PsqlAdapter{
-		Pool:   pool,
-		Logger: logger,
+		pool:   pool,
+		logger: logger,
 	}, nil
 }

@@ -5,9 +5,11 @@
 
 -- DROP TABLE IF EXISTS public.clients;
 
+CREATE SEQUENCE pk_clients_id_sequence;
+
 CREATE TABLE IF NOT EXISTS public.clients
 (
-    id bigint NOT NULL,
+    id bigint NOT NULL DEFAULT nextval('pk_clients_id_sequence'),
     name text COLLATE pg_catalog."default" NOT NULL,
     contact text COLLATE pg_catalog."default" NOT NULL,
     created_at timestamp without time zone NOT NULL DEFAULT now(),

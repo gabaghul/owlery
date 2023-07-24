@@ -9,7 +9,7 @@ import (
 )
 
 func (a PsqlAdapter) GetAllEmailingConfigs(ctx context.Context) (configs []models.EmailingConfigs, err error) {
-	rows, err := a.Pool.QueryContext(ctx, "SELECT client_id, created_at, updated_at, active FROM emailing_configs")
+	rows, err := a.pool.QueryContext(ctx, "SELECT client_id, created_at, updated_at, active FROM emailing_configs")
 	if err != nil {
 		return []models.EmailingConfigs{}, errors.Wrap(err, "could not fetch all emailing configs")
 	}
@@ -32,8 +32,8 @@ func (a PsqlAdapter) GetAllEmailingConfigs(ctx context.Context) (configs []model
 	return configs, nil
 }
 
-func (a PsqlAdapter) GetEmailingConfigsByClientID(ctx context.Context, clientID string) (configs []models.EmailingConfigs, err error) {
-	rows, err := a.Pool.QueryContext(ctx, "SELECT client_id, created_at, updated_at, active FROM emailing_configs WHERE client_id = $1", clientID)
+func (a PsqlAdapter) GetEmailingConfigsByClientID(ctx context.Context, clientID int64) (configs []models.EmailingConfigs, err error) {
+	rows, err := a.pool.QueryContext(ctx, "SELECT client_id, created_at, updated_at, active FROM emailing_configs WHERE client_id = $1", clientID)
 	if err != nil {
 		return []models.EmailingConfigs{}, errors.Wrap(err, "could not fetch all emailing configs")
 	}
