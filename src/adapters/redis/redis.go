@@ -16,10 +16,10 @@ func (a RedisAdapter) Store(ctx context.Context, key string, value interface{}, 
 	return nil
 }
 
-func (a RedisAdapter) Get(ctx context.Context, key string) (value interface{}, err error) {
+func (a RedisAdapter) Get(ctx context.Context, key string) (value string, err error) {
 	value, err = a.client.Get(ctx, key).Result()
 	if err != nil && err != redis.Nil {
-		return nil, errors.Wrap(err, fmt.Sprintf("could not get value for key %s", key))
+		return "", errors.Wrap(err, fmt.Sprintf("could not get value for key %s", key))
 	}
 
 	return value, nil
