@@ -32,7 +32,7 @@ func (s EmailingService) DoEmailPooling(ctx context.Context) error {
 	return nil
 }
 
-func (s EmailingService) processPooling(ctx context.Context, config models.EmailingConfigs, wg *sync.WaitGroup) {
+func (s EmailingService) processPooling(ctx context.Context, config models.EmailingConfig, wg *sync.WaitGroup) {
 	defer wg.Done()
 	now := time.Now()
 

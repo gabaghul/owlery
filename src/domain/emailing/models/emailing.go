@@ -2,14 +2,14 @@ package models
 
 import "time"
 
-type EmailingConfigs struct {
+type EmailingConfig struct {
 	ClientID  int64
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	Active    bool
 }
 
-type ContactLists struct {
+type ContactList struct {
 	ListID    string
 	ClientID  int64
 	CreatedAt time.Time
@@ -17,10 +17,19 @@ type ContactLists struct {
 	Active    bool
 }
 
-func (m EmailingConfigs) IsZero() bool {
+type Contact struct {
+	ID        string
+	ClientID  string
+	Firstname string
+	Lastname  string
+	Email     string
+	Status    string
+}
+
+func (m EmailingConfig) IsZero() bool {
 	return m.ClientID == 0
 }
 
-func (m ContactLists) IsZero() bool {
+func (m ContactList) IsZero() bool {
 	return m.ClientID == 0 || m.ListID == ""
 }

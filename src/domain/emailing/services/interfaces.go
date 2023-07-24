@@ -19,10 +19,10 @@ type MailChimpAdapter interface {
 }
 
 type PsqlAdapter interface {
-	GetAllContactLists(ctx context.Context) ([]models.ContactLists, error)
-	GetContactListsByClientID(ctx context.Context, clientID int64) ([]models.ContactLists, error)
-	GetAllEmailingConfigs(ctx context.Context) ([]models.EmailingConfigs, error)
-	GetEmailingConfigsByClientID(ctx context.Context, clientID int64) ([]models.EmailingConfigs, error)
+	GetAllContactLists(ctx context.Context) ([]models.ContactList, error)
+	GetContactListsByClientID(ctx context.Context, clientID int64) ([]models.ContactList, error)
+	GetAllEmailingConfigs(ctx context.Context) ([]models.EmailingConfig, error)
+	GetEmailingConfigsByClientID(ctx context.Context, clientID int64) ([]models.EmailingConfig, error)
 }
 
 type EmailingService struct {
