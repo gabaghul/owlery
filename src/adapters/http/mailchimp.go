@@ -31,11 +31,10 @@ type GetContactsByListIDErrorResponse struct {
 }
 
 type GetContactsByListIDMembers struct {
-	UniqueEmailID string `json:"unique_email_id"`
-	FirstName     string `json:"firstname"`
-	LastName      string `json:"lastname"`
-	Email         string `json:"email"`
-	Status        string `json:"status"`
+	UniqueEmailID string                 `json:"unique_email_id"`
+	MergeFields   map[string]interface{} `json:"merge_fields"`
+	Email         string                 `json:"email_address"`
+	Status        string                 `json:"status"`
 }
 
 func (a MailChimpAdapter) GetContactsByListID(ctx context.Context, listID string, offset, count int64) (response GetContactsByListIDResponse, err error) {
