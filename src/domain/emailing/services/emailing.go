@@ -19,26 +19,20 @@ func (s EmailingService) DoEmailPooling(ctx context.Context) error {
 		return errors.Wrap(err, "could not fetch emailing configs from sql adapter")
 	}
 
-	channelResults := make(chan string)
 	var wg sync.WaitGroup
 
 	for _, config := range configs {
 		// adding one process to wait group counter
 		wg.Add(1)
 
-		go s.processPooling(ctx, config, &wg, channelResults) // start go routines for each config
+		go s.processPooling(ctx, config, &wg) // start go routines for each config
 	}
 
-	// closes channels after all processing is done
-	go func() {
-		wg.Wait() // wait for all go routines to finish
-		close(channelResults)
-	}()
-
+	wg.Wait()
 	return nil
 }
 
-func (s EmailingService) processPooling(ctx context.Context, config models.EmailingConfigs, wg *sync.WaitGroup, channelResults chan<- string) {
+func (s EmailingService) processPooling(ctx context.Context, config models.EmailingConfigs, wg *sync.WaitGroup) {
 	defer wg.Done()
 	now := time.Now()
 
@@ -49,7 +43,6 @@ func (s EmailingService) processPooling(ctx context.Context, config models.Email
 			Str("at", time.Now().Format(time.RFC3339)).
 			Msg("could not get contacts list from sql adapter")
 
-		channelResults <- "error"
 		return
 	}
 
@@ -83,5 +76,4 @@ func (s EmailingService) processPooling(ctx context.Context, config models.Email
 		Str("client_id", strconv.Itoa(int(config.ClientID))).
 		Str("elapsed_time", fmt.Sprintf("%dms", time.Now().UnixMilli()-now.UnixMilli())).
 		Msg("successfully processed emailing config")
-	channelResults <- "done" // sending random info to the channel just to have some output
 }
