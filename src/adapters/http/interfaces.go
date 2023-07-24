@@ -11,10 +11,10 @@ type MailChimpAdapter struct {
 	BaseURL string
 	Server  string
 	Client  http.Client
-	Logger  zerolog.Logger
+	Logger  *zerolog.Logger
 }
 
-func NewMailChimpAdapter(client http.Client, logger zerolog.Logger, baseURL, apiKey, server string) MailChimpAdapter {
+func NewMailChimpAdapter(client http.Client, logger *zerolog.Logger, baseURL, apiKey, server string) MailChimpAdapter {
 	return MailChimpAdapter{
 		APIKey:  apiKey,
 		BaseURL: baseURL,
