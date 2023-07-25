@@ -74,6 +74,7 @@ func (a MailChimpAdapter) GetContactsByListID(ctx context.Context, listID string
 		a.logger.Debug().
 			Str("list_id", listID).
 			Str("total_items", strconv.Itoa(int(response.TotalItems))).
+			Int64("offset", offset).
 			Msg("successfully received data from members list info api")
 		return response, nil
 	default:

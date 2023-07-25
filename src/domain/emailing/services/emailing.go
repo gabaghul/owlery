@@ -77,6 +77,17 @@ func (s EmailingService) processPooling(ctx context.Context, config models.Email
 				break
 			}
 			contacts = append(contacts, s.toDomain(contactsBatch, list.ClientID)...)
+			offset += defaultCount
+			if offset >= int(contactsBatch.TotalItems) {
+				s.logger.Info().
+					Int64("client_id", config.ClientID).
+					Int64("total_items", contactsBatch.TotalItems).
+					Int("offset", offset).
+					Msg("fully processed contacts lists for client id")
+
+				offset = int(contactsBatch.TotalItems)
+				break
+			}
 
 			_, err = s.ometria.IngestContactRecords(ctx, contacts)
 			if err != nil {
@@ -89,16 +100,6 @@ func (s EmailingService) processPooling(ctx context.Context, config models.Email
 				break
 			}
 
-			offset += defaultCount
-			if offset >= int(contactsBatch.TotalItems) {
-				s.logger.Info().
-					Int64("client_id", config.ClientID).
-					Str("total_processed", strconv.Itoa(int(contactsBatch.TotalItems))).
-					Msg("fully processed contacts lists for client id")
-
-				offset = int(contactsBatch.TotalItems)
-				break
-			}
 		}
 		if err != nil {
 			s.logger.Err(err).
@@ -124,7 +125,7 @@ func (s EmailingService) processPooling(ctx context.Context, config models.Email
 	s.logger.Debug().
 		Str("client_id", strconv.Itoa(int(config.ClientID))).
 		Str("elapsed_time", fmt.Sprintf("%dms", time.Now().UnixMilli()-now.UnixMilli())).
-		Msg("successfully processed emailing config")
+		Msg("processed emailing config")
 }
 
 func (s EmailingService) toDomain(contact http.GetContactsByListIDResponse, clientID int64) []models.Contact {
@@ -140,6 +141,7 @@ func (s EmailingService) toDomain(contact http.GetContactsByListIDResponse, clie
 		contacts[i] = models.Contact{
 			ID:        c.UniqueEmailID,
 			ClientID:  clientID,
+			Email:     c.Email,
 			Firstname: firstName,
 			Lastname:  lastName,
 		}

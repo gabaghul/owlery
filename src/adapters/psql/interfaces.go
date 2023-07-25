@@ -18,7 +18,7 @@ func NewPsqlAdapter(logger *zerolog.Logger, host string, port int, user, passwor
 	psqlConnString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	pool, err := sql.Open("postgres", psqlConnString)
 	if err != nil {
-		return PsqlAdapter{}, errors.Wrap(err, "could not connect to database")
+		return PsqlAdapter{}, errors.Wrap(err, "could not connect to database;")
 	}
 
 	return PsqlAdapter{

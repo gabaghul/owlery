@@ -6,4 +6,4 @@ env:
 	- docker-compose up -d
 
 start:
-	- @go run src/main.go
+	- @go run main.go

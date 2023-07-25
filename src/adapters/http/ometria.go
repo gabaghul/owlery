@@ -3,6 +3,7 @@ package http
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -81,13 +82,18 @@ func (a OmetriaAdapter) IngestContactRecords(ctx context.Context, contacts []mod
 			return 0, errors.Wrap(err, "could not unmarshal response error body from contact ingestion callback to json")
 		}
 
+		// since it's debug level, it shouldn't appear on production environments
+		a.logger.Debug().
+			Str("base64_request_body", base64.StdEncoding.EncodeToString(reqBody)).
+			Msg(fmt.Sprintf("message with base64 request for debugging, statuscode %d", resBody.StatusCode))
+
 		a.logger.Error().
 			Str("status", strconv.Itoa(int(response.Status))).
 			Str("reason", response.Reason).
 			Str("title", response.Title).
 			Str("detail", response.Detail).
 			Msg(fmt.Sprintf("error with status code %d received from contact ingest api", resBody.StatusCode))
-		return 0, errors.New(fmt.Sprintf("error with status code %d received from contact ingest api"))
+		return 0, errors.New(fmt.Sprintf("error with status code %d received from contact ingest api", resBody.StatusCode))
 	}
 }
 

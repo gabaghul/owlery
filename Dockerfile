@@ -2,6 +2,9 @@ FROM golang:alpine AS builder
 
 RUN apk update && apk add --no-cache git
 
+ENV OMETRIA_APIKEY <your_api_key>
+ENV MAILCHIMP_APIKEY <your_api_key>
+
 ADD go.* /owlery/
 WORKDIR /owlery
 COPY . .
