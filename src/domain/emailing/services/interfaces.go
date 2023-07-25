@@ -18,6 +18,10 @@ type MailChimpAdapter interface {
 	GetContactsByListID(ctx context.Context, listID string, offset, count int64) (http.GetContactsByListIDResponse, error)
 }
 
+type OmetriaAdapter interface {
+	IngestContactRecords(ctx context.Context, contacts []models.Contact) (int, error)
+}
+
 type PsqlAdapter interface {
 	GetAllContactLists(ctx context.Context) ([]models.ContactList, error)
 	GetContactListsByClientID(ctx context.Context, clientID int64) ([]models.ContactList, error)
@@ -30,13 +34,15 @@ type EmailingService struct {
 	psql      PsqlAdapter
 	redis     RedisAdapter
 	mailchimp MailChimpAdapter
+	ometria   OmetriaAdapter
 }
 
-func NewEmailingService(logger *zerolog.Logger, psql PsqlAdapter, redis RedisAdapter, mailchimp MailChimpAdapter) EmailingService {
+func NewEmailingService(logger *zerolog.Logger, psql PsqlAdapter, redis RedisAdapter, mailchimp MailChimpAdapter, ometria OmetriaAdapter) EmailingService {
 	return EmailingService{
 		logger:    logger,
 		psql:      psql,
 		redis:     redis,
 		mailchimp: mailchimp,
+		ometria:   ometria,
 	}
 }

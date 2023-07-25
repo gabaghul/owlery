@@ -14,7 +14,7 @@ type MailChimpAdapter struct {
 	logger  *zerolog.Logger
 }
 
-type OmetriaEmailingIngestAdapter struct {
+type OmetriaAdapter struct {
 	apiKey  string
 	baseURL string
 	client  http.Client
@@ -31,8 +31,8 @@ func NewMailChimpAdapter(client http.Client, logger *zerolog.Logger, baseURL, ap
 	}
 }
 
-func NewOmetriaEmailingIngestAdapter(client http.Client, logger *zerolog.Logger, apiKey, baseUrl string) OmetriaEmailingIngestAdapter {
-	return OmetriaEmailingIngestAdapter{
+func NewOmetriaAdapter(client http.Client, logger *zerolog.Logger, apiKey, baseUrl string) OmetriaAdapter {
+	return OmetriaAdapter{
 		client:  client,
 		apiKey:  apiKey,
 		baseURL: baseUrl,

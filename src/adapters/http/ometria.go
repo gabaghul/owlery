@@ -33,7 +33,7 @@ type ingestContactRecordsErrorResponse struct {
 	Detail string `json:"detail"`
 }
 
-func (a OmetriaEmailingIngestAdapter) IngestContactRecords(ctx context.Context, contacts []models.Contact) (int, error) {
+func (a OmetriaAdapter) IngestContactRecords(ctx context.Context, contacts []models.Contact) (int, error) {
 	url := fmt.Sprintf("%s/record", a.baseURL)
 
 	data := a.toRequestBody(contacts)
@@ -91,7 +91,7 @@ func (a OmetriaEmailingIngestAdapter) IngestContactRecords(ctx context.Context, 
 	}
 }
 
-func (a OmetriaEmailingIngestAdapter) toRequestBody(contacts []models.Contact) []ingestContactRecordsEntity {
+func (a OmetriaAdapter) toRequestBody(contacts []models.Contact) []ingestContactRecordsEntity {
 	entities := make([]ingestContactRecordsEntity, len(contacts))
 	for i, contact := range contacts {
 		entities[i] = ingestContactRecordsEntity{
