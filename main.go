@@ -3,8 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"path/filepath"
-	"runtime"
+	"os"
 
 	httpAdapter "github.com/gabaghul/owlery/src/adapters/http"
 	psqlAdapter "github.com/gabaghul/owlery/src/adapters/psql"
@@ -13,14 +12,12 @@ import (
 	"github.com/gabaghul/owlery/src/helpers"
 )
 
-var (
-	_, b, _, _ = runtime.Caller(0)
-	basepath   = filepath.Dir(b)
-)
-
 func main() {
 	ctx := context.Background()
-	configs := helpers.LoadConfigs(fmt.Sprintf("%s/configs", basepath), "application-local")
+	// time.Sleep(time.Minute * 15)
+	root, _ := os.Getwd()
+
+	configs := helpers.LoadConfigs(fmt.Sprintf("%s/configs", root), "application-local")
 	logger := helpers.GetLogger()
 	httpClient := helpers.NewHTTPClient()
 

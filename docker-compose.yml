@@ -7,15 +7,30 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
+    networks:
+      - owlery_network
   cache:
     image: redis:6.2-alpine
     restart: always
     ports:
-      - '6379:6379'
+      - '127.0.0.1:6379:6379'
     command: redis-server --save 20 1 --loglevel warning --requirepass randompass
+    networks:
+      - owlery_network
+  service:
+    image: owlery:latest
+    container_name: owlery
+    networks:
+      - owlery_network
+    depends_on:
+      - db
+      - cache
 volumes:
   db:
     driver: local
+networks:
+  owlery_network:
+    driver: bridge

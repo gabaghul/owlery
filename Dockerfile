@@ -1,20 +1,32 @@
-FROM golang:alpine AS builder
+# Stage 1: Build the Golang binary
+FROM golang:latest AS builder
 
-RUN apk update && apk add --no-cache git
+# Set the working directory inside the container
+WORKDIR /app
 
-ENV OMETRIA_APIKEY <your_api_key>
-ENV MAILCHIMP_APIKEY <your_api_key>
-
-ADD go.* /owlery/
-WORKDIR /owlery
+# Copy the application source code to the container's working directory
 COPY . .
 
-RUN go mod download
+# Build the Golang binary with CGO disabled to create a statically linked binary
+RUN CGO_ENABLED=0 go build -o owlery .
 
-RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o main.go
 
-FROM scratch
-# Copy our static executable.
-COPY --from=builder /owlery /go/bin/owlery
+# Stage 2: Create a minimal image using Alpine
+FROM alpine:latest
 
-ENTRYPOINT ["/go/bin/owlery/owlery"]
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Golang binary from the previous stage to the current stage
+COPY --from=builder /app/owlery .
+
+# Copy the configuration file from the host to the container
+COPY ./configs/application-local.yml /app/configs/application-local.yml
+
+# Set environment variables
+ENV CONFIG_PATH /app/configs/application-local.yml
+ENV OMETRIA_APIKEY <ometria-api-key>
+ENV MAILCHIMP_APIKEY <mailchimp-api-key>
+
+# Run the Golang binary and fetch configurations from the specified file
+CMD ["./owlery"]
