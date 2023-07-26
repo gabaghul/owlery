@@ -49,7 +49,7 @@ You gonna find some SQL scripts at  ``assets/sql``. Using the postgres container
 
 **Don't forget to create your database! I used the name ``custom`` for the database if you need a suggestion**
 
-**3. Application config: **
+**3. Application config:**
 
 Maybe you won't need this step, but check if the yaml at ``configs/application-local.yml`` has the connection directing to your containers, if you run and see some connection refused or similar errors, this file have the connection addresses the application needs.
 
