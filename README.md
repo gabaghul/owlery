@@ -2,7 +2,7 @@
 
 Just like at Hogwarts, Owlery is where the owls that knows every destinations stays, trust them and you can reach anyone!
 
-![I'd never try to get a letter from those.](https://64.media.tumblr.com/847f946e7bdcee2608fc8ff2da69480a/tumblr_pxw01wSn031yqzlz8o1_500.gifv)
+![I'd never try to get a letter from those.](owlery_cute_gif.gif)
 
 ## How it works
 
